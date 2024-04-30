@@ -2,11 +2,14 @@ import os
 import pandas as pd
 import re
 import numpy as np
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, random_split, DataLoader
 import torch
+import torch.nn as nn
 import librosa
 from sklearn.metrics import roc_auc_score, roc_curve
 import matplotlib.pyplot as plt
+import wandb
+from tqdm import tqdm
 import wandb
 
 
@@ -120,3 +123,86 @@ def plot_roc_curve(fpr, tpr, auc_score, eer, filename=None):
         plt.savefig(filename)  # Save plot to file
     else:
         plt.show()  # Show plot if filename is not provided
+
+
+def set_trainable_layers(model, config):
+    """
+    Freezes all layers except for a specified number of start and end layers defined in the config.
+    Uses default values if not specified in the config.
+
+    :param model: The model whose layers are to be partially frozen.
+    :param config: Configuration dictionary which may contain 'start_trainable_layers' and 'end_trainable_layers'.
+    """
+    start_layers = config.get(
+        "start_trainable_layers", 5
+    )  # Default to 5 if not specified
+    end_layers = config.get("end_trainable_layers", 5)  # Default to 5 if not specified
+
+    children = list(model.named_parameters())
+    num_children = len(children)
+    for i, (_, param) in enumerate(children):
+        if i < start_layers or i >= num_children - end_layers:
+            param.requires_grad = True
+        else:
+            param.requires_grad = False
+
+
+def tune_model(model, dataset, config, device, project):
+    # Initialize Weights & Biases
+    wandb.init(project=project, config=config)
+
+    # Split dataset into training and validation sets
+    train_size = int(0.8 * len(dataset))
+    val_size = len(dataset) - train_size
+    train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
+
+    # Setup DataLoaders for training and validation
+    train_loader = DataLoader(
+        train_dataset, batch_size=config["batch_size"], shuffle=True
+    )
+    val_loader = DataLoader(val_dataset, batch_size=config["batch_size"], shuffle=False)
+
+    # Define loss function with default weights
+    weights = torch.tensor(config.get("weights", [0.1, 0.9]), dtype=torch.float32).to(
+        device
+    )
+    criterion = nn.CrossEntropyLoss(weight=weights)
+
+    # Define optimizer
+    optimizer = torch.optim.Adam(
+        filter(lambda p: p.requires_grad, model.parameters()),
+        lr=config["learning_rate"],
+    )
+
+    # Training and validation loop
+    for epoch in range(config["num_epochs"]):
+        model.train()
+        total_train_loss = 0
+        train_pbar = tqdm(train_loader, desc=f"Training Epoch {epoch+1}")
+        for inputs, targets in train_pbar:
+            inputs, targets = inputs.to(device), targets.to(device)
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = criterion(outputs, targets)
+            loss.backward()
+            optimizer.step()
+            total_train_loss += loss.item() * inputs.size(0)
+        train_loss = total_train_loss / len(train_dataset)
+
+        model.eval()
+        total_val_loss = 0
+        val_pbar = tqdm(val_loader, desc=f"Validation Epoch {epoch+1}")
+        with torch.no_grad():
+            for inputs, targets in val_pbar:
+                inputs, targets = inputs.to(device), targets.to(device)
+                outputs = model(inputs)
+                loss = criterion(outputs, targets)
+                total_val_loss += loss.item() * inputs.size(0)
+        val_loss = total_val_loss / len(val_dataset)
+
+        wandb.log({"epoch": epoch, "train_loss": train_loss, "val_loss": val_loss})
+        print({"epoch": epoch, "train_loss": train_loss, "val_loss": val_loss})
+
+    wandb.finish()
+
+    return model
