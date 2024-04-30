@@ -23,14 +23,16 @@ if __name__ == "__main__":
     to_tune = True
     tune_config = {
         "name": "finetune_model",
-        "num_epochs": 5,
+        "num_epochs": 10,
         "batch_size": 32,
         "learning_rate": 0.001,
         "start_trainable_layers": 5,
         "end_trainable_layers": 5,
-        "subset_data": 0.5,
+        "subset_data": 1,
     }
 
+    print()
+    print("Loading Original Model")
     # Loading Original Model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_dict = torch.load(model_dict_file, map_location=device)
@@ -40,6 +42,8 @@ if __name__ == "__main__":
     model.load_state_dict(model_dict)
     model_name = "pre-trained"
 
+    print()
+    print("Evaluating Original Model on Custom data")
     # Load data and create data loader
     custom_df = get_sound_file_path_df(custom_data_path)
     test_custom_df = custom_df[custom_df["type"] == "test"].copy()
@@ -56,6 +60,8 @@ if __name__ == "__main__":
         fpr, tpr, auc, eer, filename="./outputs/evaluation_original_custom.png"
     )
 
+    print()
+    print("Tuning Original Model on For2 data")
     if to_tune:
         set_trainable_layers(model, tune_config)
         for2_df = get_sound_file_path_df(for2_data_path)
@@ -83,6 +89,8 @@ if __name__ == "__main__":
     tuned_model = DataParallel(tuned_model)
     tuned_model.load_state_dict(tuned_model_dict)
 
+    print()
+    print("Evaluating Tuned Model on For2 data")
     # evaluating on testing set of for2 data
     for2_df = get_sound_file_path_df(for2_data_path)
     test_for2_df = for2_df[for2_df["type"] == "test"].copy()
@@ -103,6 +111,8 @@ if __name__ == "__main__":
         filename=f"./outputs/evaluation_finetune_for2_{tune_config['subset_data']}.png",
     )
 
+    print()
+    print("Evaluating Tuned Model on Custom data")
     custom_df = get_sound_file_path_df(custom_data_path)
     test_custom_df = custom_df[custom_df["type"] == "test"].copy()
     test_custom_set = CustomSoundDataset(test_custom_df, seconds=2)
