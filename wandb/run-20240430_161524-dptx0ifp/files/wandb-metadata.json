@@ -1,0 +1,148 @@
+{
+    "os": "Linux-5.15.146.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.9.19",
+    "heartbeatAt": "2024-04-30T10:45:24.866042",
+    "startedAt": "2024-04-30T10:45:24.009995",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/prateeks/projects/iitj/su/Speech-Understanding-PA-03/code/main.py",
+    "codePathLocal": "code/main.py",
+    "codePath": "code/main.py",
+    "git": {
+        "remote": "git@github.com:pscss/Speech-Understanding-PA-03.git",
+        "commit": "4f97535c9525c32962ed1ead3d4c7bd246527f76"
+    },
+    "email": "m22aie215@iitj.ac.in",
+    "root": "/home/prateeks/projects/iitj/su/Speech-Understanding-PA-03",
+    "host": "optimus",
+    "username": "prateeks",
+    "executable": "/home/prateeks/projects/iitj/su/Speech-Understanding-PA-03/.venv/bin/python",
+    "cpu_count": 10,
+    "cpu_count_logical": 20,
+    "cpu_freq": {
+        "current": 2111.998999999999,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2111.999,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 1006.853931427002,
+            "used": 302.2106132507324
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3060",
+            "memory_total": 12884901888
+        }
+    ],
+    "memory": {
+        "total": 31.240665435791016
+    }
+}

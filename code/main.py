@@ -28,7 +28,7 @@ if __name__ == "__main__":
         "learning_rate": 0.001,
         "start_trainable_layers": 5,
         "end_trainable_layers": 5,
-        "subset_data": 0.1,
+        "subset_data": 0.5,
     }
 
     # Loading Original Model

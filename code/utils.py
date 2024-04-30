@@ -77,17 +77,37 @@ class CustomSoundDataset(Dataset):
         return padded_x
 
 
-def evaluate_model(data_loader, model, device, wandb_log=False):
+# def evaluate_model(data_loader, model, device):
+#     model.eval()
+#     true_labels = []
+#     predictions = []
+
+#     with torch.no_grad():
+#         for data, labels in data_loader:
+#             data, labels = data.to(device), labels.to(device)
+#             outputs = model(data)
+#             predictions.extend(outputs[:, 1].cpu().numpy())
+#             true_labels.extend(labels.cpu().numpy())
+
+#     return true_labels, predictions
+
+
+def evaluate_model(
+    data_loader,
+    model,
+    device,
+):
     model.eval()
     true_labels = []
     predictions = []
 
-    with torch.no_grad():
+    with torch.no_grad(), tqdm(total=len(data_loader)) as progress_bar:
         for data, labels in data_loader:
             data, labels = data.to(device), labels.to(device)
             outputs = model(data)
             predictions.extend(outputs[:, 1].cpu().numpy())
             true_labels.extend(labels.cpu().numpy())
+            progress_bar.update(1)
 
     return true_labels, predictions
 
