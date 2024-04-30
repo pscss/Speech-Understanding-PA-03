@@ -1,0 +1,15 @@
+torch
+torchaudio
+torchvision
+numpy==1.20.0
+pandas
+matplotlib
+omegaconf
+bitarray
+hydra-core==1.1.2
+scikit-learn
+scipy
+librosa
+tensorboardX
+wandb
+tqdm
