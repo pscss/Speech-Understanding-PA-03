@@ -10,7 +10,6 @@ from sklearn.metrics import roc_auc_score, roc_curve
 import matplotlib.pyplot as plt
 import wandb
 from tqdm import tqdm
-import wandb
 
 
 def get_sound_file_path_df(path):
